@@ -23,4 +23,7 @@ public:
 
     // Shows deck count
     void ShowDeckCount() const;
+    
+    // New Funtion that Plays cards down
+    void PlayCard(int index, GameEngine& engine); // New Function!
 };

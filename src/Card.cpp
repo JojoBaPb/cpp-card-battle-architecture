@@ -1,8 +1,11 @@
 #include "Card.h"
 
-// Constructor
-Card::Card(std::string name, int cost, int power, std::string description)
-    : m_name(std::move(name)), m_cost(cost), m_power(power), m_description(std::move(description)) 
+Card::Card(std::string name, int cost, int power, std::string description, CardAbility ability)
+    : m_name(std::move(name)), 
+      m_cost(cost), 
+      m_power(power), 
+      m_description(std::move(description)),
+      m_onRevealEffect(std::move(ability)) // Store the logic
 {
 }
 
@@ -14,4 +17,15 @@ std::string Card::GetDescription() const { return m_description; }
 void Card::PrintStats() const {
     std::cout << "   [" << m_cost << "] " << m_name << " (Power: " << m_power << ")\n"
               << "       Desc: " << m_description << "\n";
+}
+
+void Card::Play(GameEngine& engine) {
+    // 1. Default Play Logic (Print to screen)
+    std::cout << "[GAME] Playing Card: " << m_name << "!\n";
+    
+    // 2. Trigger On Reveal if it exists
+    if (m_onRevealEffect) {
+        std::cout << "       -> Triggering On Reveal Ability...\n";
+        m_onRevealEffect(engine); // Execute the stored function!
+    }
 }
