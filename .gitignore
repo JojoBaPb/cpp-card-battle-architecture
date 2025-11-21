@@ -416,3 +416,12 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# CMake build artifacts
+build/
+cmake-build-debug/
+compile_commands.json  # Crucial for Neovim LSP to understand your code
+.cache/
+
+# VS Code settings (optional: keep if you want to share tasks.json, remove if you have personal paths)
+.vscode/
