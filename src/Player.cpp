@@ -59,3 +59,25 @@ void Player::PlayCard(int index, GameEngine& engine) {
     // In Marvel Snap, it goes to the board. We don't have a board yet.
     // So let's leave it in hand for this phase.
 }
+
+const Card* Player::InspectCard(int index) const {
+    if (index < 0 || index >= m_hand.size()) {
+        return nullptr;
+    }
+    return m_hand[index].get();
+}
+
+std::unique_ptr<Card> Player::PlayCardFromHand(int index) {
+    if (index < 0 || index >= m_hand.size()) {
+        std::cout << "[Error] Invalid card index.\n";
+        return nullptr;
+    }
+
+    // 1. Move ownership out of the vector
+    std::unique_ptr<Card> cardToPlay = std::move(m_hand[index]);
+
+    // 2. Remove the empty slot from the vector
+    m_hand.erase(m_hand.begin() + index);
+
+    return cardToPlay;
+}
