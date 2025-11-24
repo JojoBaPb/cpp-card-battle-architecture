@@ -81,3 +81,22 @@ std::unique_ptr<Card> Player::PlayCardFromHand(int index) {
 
     return cardToPlay;
 }
+
+bool Player::SpendEnergy(int amount) {
+    if (amount > m_currentEnergy) {
+        return false; // Not enough energy
+    }
+    m_currentEnergy -= amount;
+    return true;
+}
+
+void Player::OnTurnStart() {
+    // Marvel Snap Logic: Max Energy +1 (up to 6), Refill to Max
+    if (m_maxEnergy < 6) {
+        m_maxEnergy++;
+    }
+    m_currentEnergy = m_maxEnergy;
+    
+    // Also draw a card at start of turn!
+    DrawCard();
+}
