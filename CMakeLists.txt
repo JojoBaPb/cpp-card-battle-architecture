@@ -21,6 +21,7 @@ set(SOURCES
     src/Player.cpp
     src/GameEngine.cpp
     src/PlayState.cpp
+    src/Location.cpp
 )
 
 # Create the executable
