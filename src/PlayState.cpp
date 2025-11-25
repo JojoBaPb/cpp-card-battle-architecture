@@ -8,14 +8,15 @@
 void PlayState::Enter(GameEngine& engine) {
     std::cout << "\n[PlayState] Entering... Generating Board.\n";
     
+    // 1. Setup Locations
     m_locations.reserve(3);
     m_locations.emplace_back("The Ruins", "No effect.");
-    m_locations.emplace_back("Stark Tower", "+2 Power end of T5.");
-    m_locations.emplace_back("Atlantis", "+5 Power if alone.");
+    m_locations.emplace_back("Stark Tower", "At end of turn 5, give all cards here +2 Power.");
+    m_locations.emplace_back("Atlantis", "If you have only 1 card here, it has +5 Power.");
 
+    // 2. Setup Player Deck (Energy Curve)
     Player* player = engine.GetPlayer();
     
-    // Simple Logic
     player->AddCardToDeck(std::make_unique<Card>("Misty Knight", 1, 2, "No Ability."));
     player->AddCardToDeck(std::make_unique<Card>("Shocker", 2, 3, "No Ability."));
     player->AddCardToDeck(std::make_unique<Card>("Cyclops", 3, 4, "No Ability."));
@@ -23,7 +24,9 @@ void PlayState::Enter(GameEngine& engine) {
     player->AddCardToDeck(std::make_unique<Card>("Iron Man", 5, 0, "Ongoing: Double Power."));
     player->AddCardToDeck(std::make_unique<Card>("Hulk", 6, 12, "Smash."));
     
-    // Initial Hand (Draw 3)
+    std::cout << "Deck Ready. Drawing initial hand...\n";
+
+    // Draw initial hand (3 cards)
     player->DrawCard();
     player->DrawCard();
     player->DrawCard();
@@ -78,7 +81,7 @@ void PlayState::Update(GameEngine& engine) {
         return;
     }
 
-    // B. Validate Energy (THE NEW RULE)
+    // B. Validate Energy (The Rules Check)
     if (cardToInspect->GetCost() > player->GetEnergy()) {
         std::cout << "[Rules] Not enough Energy! (Cost: " << cardToInspect->GetCost() 
                   << ", You have: " << player->GetEnergy() << ")\n";
@@ -102,14 +105,12 @@ void PlayState::Update(GameEngine& engine) {
     // Spend Energy FIRST
     player->SpendEnergy(cardToInspect->GetCost());
 
-    // Move Card
+    // Move Card from Hand to Location
     auto card = player->PlayCardFromHand(cardIndex);
     if (card) {
-        // card->Play(engine); // Trigger abilities later
         bool success = m_locations[locIndex].AddCard(std::move(card));
         if (!success) {
             std::cout << "[Warning] Location Full.\n";
-            // Refund energy? In this simple version, maybe not.
         } else {
             std::cout << "-> Played " << cardToInspect->GetName() << "!\n";
         }
