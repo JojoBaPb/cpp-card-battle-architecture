@@ -11,7 +11,10 @@ private:
     
     // The engine owns the player
     std::unique_ptr<Player> m_player;
-    
+  
+    // --- NEW: The AI ---
+    std::unique_ptr<Player> m_opponent;
+
     bool m_isRunning;
 
 public:
@@ -31,4 +34,7 @@ public:
 
     // Accessors (States need to access the player!)
     Player* GetPlayer() const { return m_player.get(); }
+
+    // --- NEW: Accessor for AI ---
+    Player* GetOpponent() const { return m_opponent.get(); }
 };

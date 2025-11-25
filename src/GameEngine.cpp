@@ -5,6 +5,9 @@
 
 GameEngine::GameEngine() : m_isRunning(true) {
     m_player = std::make_unique<Player>();
+
+    // --- NEW: Initialize AI ---
+    m_opponent = std::make_unique<Player>();  
 }
 
 void GameEngine::Initialize() {
